@@ -1,9 +1,11 @@
 import os
 from library import functions
 from library.classes_9 import Budget
-
+import tkinter as tk
+window = tk.Tk()
 os.system('cls' if os.name == 'nt' else 'clear')
 os.system('clear')
+window.title("Budget Buddy App")
 
 name_of_user = input("Enter your name:")
 print(f"Hey {name_of_user}, this is BudgetBuddy! Your personal Budgesting Assistant.")
