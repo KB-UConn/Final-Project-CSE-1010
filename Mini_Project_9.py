@@ -1,11 +1,25 @@
 import os
+os.system('cls' if os.name == 'nt' else 'clear')
+os.system('clear')
+
 from library import functions
 from library.classes_9 import Budget
 import tkinter as tk
+
 window = tk.Tk()
-os.system('cls' if os.name == 'nt' else 'clear')
-os.system('clear')
 window.title("Budget Buddy App")
+
+label = tk.Label(window, text="Please Enter your Name to Sign In.")
+label.pack()
+text_box = tk.Text(window, height=10, width=50)
+text_box.pack(padx=10, pady=10)
+button = tk.Button(window, text="Click Me", command=lambda: print("Button clicked!"))
+button.pack()
+window.mainloop()
+
+
+
+
 
 name_of_user = input("Enter your name:")
 print(f"Hey {name_of_user}, this is BudgetBuddy! Your personal Budgesting Assistant.")
