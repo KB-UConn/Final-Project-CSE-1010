@@ -1,9 +1,7 @@
 import os
-os.system('cls' if os.name == 'nt' else 'clear')
-os.system('clear')
-
 from library import functions
-from library.classes_9 import Budget
+from library.final_classes import Budget
+import matplotlib.pyplot as plt
 import tkinter as tk
 
 #Main Window Setup
@@ -11,24 +9,16 @@ window = tk.Tk()
 window.title("Budget Buddy App")
 window.geometry("500x400")
 
-#Code for Sign in Screen
-def toggle1():
-    if button1.winfo_viewable():
-        text_box1.destroy()
-        button1.destroy()
-        label1.destroy()
-        #global name
-        #global my_string_var
-        #name = text_box1.get("1.0", tk.END)
-        #my_string_var = name
-        #smy_string_var = tk.StringVar()
-        #label2.pack(side = "left")
-        button2.pack()
-        button3.pack()
-        button4.pack()
-        button5.pack()
-        button6.pack()
-        button7.pack()
+#Global Variables
+budgets = {}
+income = 0
+user_name = ""
+
+# Load saved categories
+for filename in os.listdir():
+    if filename.endswith(".txt"):
+        category_name = filename.replace(".txt", "")
+        budgets[category_name] = Budget(category_name)
 
 #Code for Main Menu Functions
 def hide_all():
@@ -37,23 +27,51 @@ def hide_all():
 
 def show_main_menu():
     hide_all()
+    status_msg.config(text="")
     for b in main_buttons:
         b.pack(pady=8)
+    status_msg.pack(pady=10)
 
-label1 = tk.Label(window, text="Please Enter your Name to Sign In", font = ("Montserrat", 12))
-text_box1 = tk.Text(window, height=2, width=25, font = ("Montserrat", 12))
+label1 = tk.Label(window, text = "Please Enter your Name to Sign In", font = ("Montserrat", 12))
+text_name = tk.Entry(window, font = ("Montserrat", 12))
+label_income = tk.Label(window, text = " Enter Monthly Income", font = ("Montserrat", 14))
+text_income = tk.Entry(window, font = ("Montserrat", 12))
+status_msg = tk.Label(window, text = "", fg="red", font =("Montserrat", 11))
 
 def sign_in():
-    hide_all()
-    show_main_menu()
+    global income, user_name
+    user_name = text_name.get().strip()
+    if not user_name:
+        status_msg.config(text="Error: Please enter your name.")
+        return
+    try:
+        income = float(text_income.get())
+    except ValueError:
+        status_msg.config(text="Error: Income must be a number.")
+        return
+    
+    # Hide sign-in widgets
+    label1.pack_forget()
+    text_name.pack_forget()
+    label_income.pack_forget()
+    text_income.pack_forget()
+    button1.pack_forget()
+    
+    # Show main menu buttons
+    for b in main_buttons:
+        b.pack(pady=8)
+    status_msg.config(text="")
 
-button1 = tk.Button(window, text="Click Me to Sign In", command = toggle1, font = ("Montserrat", 12))
+button1 = tk.Button(window, text="Sign In", command = sign_in, font = ("Montserrat", 12))
 
-#Sign in Screen
-label1.pack(padx=10, pady=10)
-text_box1.pack(padx=10, pady=10)
-button1.pack(padx=10, pady=10)
+label1.pack(pady=10)
+text_name.pack(pady=10)
+label_income.pack(pady=10)
+text_income.pack(pady=10)
+button1.pack(pady=10)
+status_msg.pack(pady=10)
 
+#Main Menu Widgets:
 #Main Menu Widgets:
 def go_create_category():
     hide_all()
@@ -105,6 +123,37 @@ expenses_listbox = tk.Listbox(window, width = 50, height = 10, font=("Montserrat
 # My Financial Status Screen
 label5 = tk.Label(window, text="My Financial Status", font=("Montserrat", 14))
 status_label = tk.Label(window, text = "Your status will appear here", font = ("Montserrat", 12))
+
+def show_chart():
+    if not budgets:
+        status_msg.config(text="Error: No categories to chart.")
+        return
+
+    categories = []
+    totals = []
+
+    for name, budget in budgets.items():
+        categories.append(name)
+        totals.append(sum(budget.expenses_dict.values()))
+    
+    # Bar chart
+    plt.figure(figsize=(6, 4))
+    plt.bar(categories, totals, color='skyblue')
+    plt.title("Spending by Category")
+    plt.xlabel("Category")
+    plt.ylabel("Total Spent ($)")
+    plt.tight_layout()
+    plt.show()
+
+chart_button = tk.Button(window, text="Show Spending Chart", font=("Montserrat", 12), command = show_chart)
+
+# Save Changes Screen
+def save_all_categories():
+    for budget in budgets.values():
+        budget.write_to_file()
+    status_msg.config(text="All categories saved!", fg="green")
+
+button6.config(command = save_all_categories)
 
 # Return Button
 back_button = tk.Button(window, text = "Return to Main Menu", font = ("Montserrat", 12), command = show_main_menu)
