@@ -38,6 +38,10 @@ label_income = tk.Label(window, text = " Enter Monthly Income", font = ("Montser
 text_income = tk.Entry(window, font = ("Montserrat", 12))
 status_msg = tk.Label(window, text = "", fg="red", font =("Montserrat", 11))
 
+#Display the Users Name
+user_label = tk.Label(window, text="", font=("Montserrat", 12), fg="green")
+
+#Sign In Screen
 def sign_in():
     global income, user_name
     user_name = text_name.get().strip()
