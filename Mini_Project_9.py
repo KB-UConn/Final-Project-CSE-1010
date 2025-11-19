@@ -98,9 +98,11 @@ def go_financial_status():
     total = sum([b.get_expenses() for b in budgets.values()])
     balance = functions.calc_balance(income, total)
     msg = functions.financial_status(balance)
-    status_label.config(text=f"Balance: ${balance:.2f}\n{msg}")
+    status_label.config(text=f"Balance: ${balance:.2f}")
+    status_msg_label.config(text=msg)
     label5.pack(pady=10)
     status_label.pack(pady=10)
+    status_msg_label.pack(pady=5)
     chart_button.pack(pady=10) 
     back_button.pack(pady=10)
     status_msg.pack(pady=10)
@@ -130,6 +132,7 @@ expenses_listbox = tk.Listbox(window, width = 50, height = 10, font=("Montserrat
 # My Financial Status Screen
 label5 = tk.Label(window, text="My Financial Status", font=("Montserrat", 14))
 status_label = tk.Label(window, text = "Your status will appear here", font = ("Montserrat", 12))
+status_msg_label = tk.Label(window, text="", font=("Montserrat", 12), fg="blue")
 
 def show_chart():
     if not budgets:
@@ -166,23 +169,3 @@ button6.config(command = save_all_categories)
 back_button = tk.Button(window, text = "Return to Main Menu", font = ("Montserrat", 12), command = show_main_menu)
 
 window.mainloop()
-
-name_of_user = input("Enter your name:")
-print(f"Hey {name_of_user}, this is BudgetBuddy! Your personal Budgesting Assistant.")
-income = float(input("Enter your monthly income (only numbers):"))
-total_expenses = []
-
-grocery = Budget("Grocery")
-car = Budget("Car")
-
-grocery.add_expenses()
-car.add_expenses()
-
-total_expenses.append(grocery.get_expenses())
-total_expenses.append(car.get_expenses())
-
-balance = functions.calc_balance(income, sum(total_expenses))
-functions.financial_status(balance)
-
-grocery.get_expense_details()
-car.get_expense_details()
