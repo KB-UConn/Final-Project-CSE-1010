@@ -66,6 +66,10 @@ def sign_in():
         b.pack(pady=8)
     status_msg.config(text="")
 
+    # Place user label for main menu
+    user_label.config(text=f"Hello, {user_name}!")
+    user_label.place(x=10, y=10)
+
 button1 = tk.Button(window, text="Sign In", command = sign_in, font = ("Montserrat", 12))
 
 label1.pack(pady=10)
