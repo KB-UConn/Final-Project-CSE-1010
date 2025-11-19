@@ -94,9 +94,16 @@ def go_display_expenses():
 
 def go_financial_status():
     hide_all()
+    status_msg.config(text="")
+    total = sum([b.get_expenses() for b in budgets.values()])
+    balance = functions.calc_balance(income, total)
+    msg = functions.financial_status(balance)
+    status_label.config(text=f"Balance: ${balance:.2f}\n{msg}")
     label5.pack(pady=10)
     status_label.pack(pady=10)
-    back_button.pack(pady=15)
+    chart_button.pack(pady=10) 
+    back_button.pack(pady=10)
+    status_msg.pack(pady=10)
 
 button2 = tk.Button(window, text = "Create New Expenses Category", font = ("Montserrat", 12), command = go_create_category)
 button3 = tk.Button(window, text = "Add Expenses into Category", font = ("Montserrat", 12), command = go_add_expenses)
